@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TbSpecificationOptionMapper {
-    int countByExample(TbSpecificationOptionExample example);
+    long countByExample(TbSpecificationOptionExample example);
 
     int deleteByExample(TbSpecificationOptionExample example);
 

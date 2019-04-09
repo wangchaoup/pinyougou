@@ -2,7 +2,7 @@ package com.pinyougou.pojo;
 
 import java.io.Serializable;
 
-public class TbSpecificationOption implements Serializable{
+public class TbSpecificationOption implements Serializable {
     private Long id;
 
     private String optionName;
@@ -10,6 +10,8 @@ public class TbSpecificationOption implements Serializable{
     private Long specId;
 
     private Integer orders;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -41,5 +43,20 @@ public class TbSpecificationOption implements Serializable{
 
     public void setOrders(Integer orders) {
         this.orders = orders;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", optionName=").append(optionName);
+        sb.append(", specId=").append(specId);
+        sb.append(", orders=").append(orders);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

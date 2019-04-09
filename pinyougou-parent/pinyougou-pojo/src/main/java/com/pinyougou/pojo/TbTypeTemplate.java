@@ -2,7 +2,7 @@ package com.pinyougou.pojo;
 
 import java.io.Serializable;
 
-public class TbTypeTemplate implements Serializable{
+public class TbTypeTemplate implements Serializable {
     private Long id;
 
     private String name;
@@ -12,6 +12,8 @@ public class TbTypeTemplate implements Serializable{
     private String brandIds;
 
     private String customAttributeItems;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -51,5 +53,21 @@ public class TbTypeTemplate implements Serializable{
 
     public void setCustomAttributeItems(String customAttributeItems) {
         this.customAttributeItems = customAttributeItems == null ? null : customAttributeItems.trim();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", name=").append(name);
+        sb.append(", specIds=").append(specIds);
+        sb.append(", brandIds=").append(brandIds);
+        sb.append(", customAttributeItems=").append(customAttributeItems);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

@@ -3,7 +3,7 @@ package com.pinyougou.pojo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class TbGoods implements Serializable{
+public class TbGoods implements Serializable {
     private Long id;
 
     private String sellerId;
@@ -35,6 +35,8 @@ public class TbGoods implements Serializable{
     private String isEnableSpec;
 
     private String isDelete;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -162,5 +164,32 @@ public class TbGoods implements Serializable{
 
     public void setIsDelete(String isDelete) {
         this.isDelete = isDelete == null ? null : isDelete.trim();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", sellerId=").append(sellerId);
+        sb.append(", goodsName=").append(goodsName);
+        sb.append(", defaultItemId=").append(defaultItemId);
+        sb.append(", auditStatus=").append(auditStatus);
+        sb.append(", isMarketable=").append(isMarketable);
+        sb.append(", brandId=").append(brandId);
+        sb.append(", caption=").append(caption);
+        sb.append(", category1Id=").append(category1Id);
+        sb.append(", category2Id=").append(category2Id);
+        sb.append(", category3Id=").append(category3Id);
+        sb.append(", smallPic=").append(smallPic);
+        sb.append(", price=").append(price);
+        sb.append(", typeTemplateId=").append(typeTemplateId);
+        sb.append(", isEnableSpec=").append(isEnableSpec);
+        sb.append(", isDelete=").append(isDelete);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

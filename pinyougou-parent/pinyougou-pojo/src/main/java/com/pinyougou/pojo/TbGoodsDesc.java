@@ -2,7 +2,7 @@ package com.pinyougou.pojo;
 
 import java.io.Serializable;
 
-public class TbGoodsDesc implements Serializable{
+public class TbGoodsDesc implements Serializable {
     private Long goodsId;
 
     private String introduction;
@@ -16,6 +16,8 @@ public class TbGoodsDesc implements Serializable{
     private String packageList;
 
     private String saleService;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getGoodsId() {
         return goodsId;
@@ -71,5 +73,23 @@ public class TbGoodsDesc implements Serializable{
 
     public void setSaleService(String saleService) {
         this.saleService = saleService == null ? null : saleService.trim();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", goodsId=").append(goodsId);
+        sb.append(", introduction=").append(introduction);
+        sb.append(", specificationItems=").append(specificationItems);
+        sb.append(", customAttributeItems=").append(customAttributeItems);
+        sb.append(", itemImages=").append(itemImages);
+        sb.append(", packageList=").append(packageList);
+        sb.append(", saleService=").append(saleService);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

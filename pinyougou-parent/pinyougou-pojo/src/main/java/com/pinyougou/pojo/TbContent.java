@@ -2,7 +2,7 @@ package com.pinyougou.pojo;
 
 import java.io.Serializable;
 
-public class TbContent implements Serializable{
+public class TbContent implements Serializable {
     private Long id;
 
     private Long categoryId;
@@ -13,11 +13,11 @@ public class TbContent implements Serializable{
 
     private String pic;
 
-    private String content;
-
     private String status;
 
     private Integer sortOrder;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -59,14 +59,6 @@ public class TbContent implements Serializable{
         this.pic = pic == null ? null : pic.trim();
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
     public String getStatus() {
         return status;
     }
@@ -81,5 +73,23 @@ public class TbContent implements Serializable{
 
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", categoryId=").append(categoryId);
+        sb.append(", title=").append(title);
+        sb.append(", url=").append(url);
+        sb.append(", pic=").append(pic);
+        sb.append(", status=").append(status);
+        sb.append(", sortOrder=").append(sortOrder);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

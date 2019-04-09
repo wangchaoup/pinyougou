@@ -2,7 +2,7 @@ package com.pinyougou.pojo;
 
 import java.io.Serializable;
 
-public class TbCities implements Serializable{
+public class TbCities implements Serializable {
     private Integer id;
 
     private String cityid;
@@ -10,6 +10,8 @@ public class TbCities implements Serializable{
     private String city;
 
     private String provinceid;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -41,5 +43,20 @@ public class TbCities implements Serializable{
 
     public void setProvinceid(String provinceid) {
         this.provinceid = provinceid == null ? null : provinceid.trim();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", cityid=").append(cityid);
+        sb.append(", city=").append(city);
+        sb.append(", provinceid=").append(provinceid);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TbOrder implements Serializable{
+public class TbOrder implements Serializable {
     private Long orderId;
 
     private BigDecimal payment;
@@ -54,6 +54,8 @@ public class TbOrder implements Serializable{
     private String sourceType;
 
     private String sellerId;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getOrderId() {
         return orderId;
@@ -253,5 +255,41 @@ public class TbOrder implements Serializable{
 
     public void setSellerId(String sellerId) {
         this.sellerId = sellerId == null ? null : sellerId.trim();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", orderId=").append(orderId);
+        sb.append(", payment=").append(payment);
+        sb.append(", paymentType=").append(paymentType);
+        sb.append(", postFee=").append(postFee);
+        sb.append(", status=").append(status);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", paymentTime=").append(paymentTime);
+        sb.append(", consignTime=").append(consignTime);
+        sb.append(", endTime=").append(endTime);
+        sb.append(", closeTime=").append(closeTime);
+        sb.append(", shippingName=").append(shippingName);
+        sb.append(", shippingCode=").append(shippingCode);
+        sb.append(", userId=").append(userId);
+        sb.append(", buyerMessage=").append(buyerMessage);
+        sb.append(", buyerNick=").append(buyerNick);
+        sb.append(", buyerRate=").append(buyerRate);
+        sb.append(", receiverAreaName=").append(receiverAreaName);
+        sb.append(", receiverMobile=").append(receiverMobile);
+        sb.append(", receiverZipCode=").append(receiverZipCode);
+        sb.append(", receiver=").append(receiver);
+        sb.append(", expire=").append(expire);
+        sb.append(", invoiceType=").append(invoiceType);
+        sb.append(", sourceType=").append(sourceType);
+        sb.append(", sellerId=").append(sellerId);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

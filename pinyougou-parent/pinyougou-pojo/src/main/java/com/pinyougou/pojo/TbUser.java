@@ -3,7 +3,7 @@ package com.pinyougou.pojo;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TbUser implements Serializable{
+public class TbUser implements Serializable {
     private Long id;
 
     private String username;
@@ -47,6 +47,8 @@ public class TbUser implements Serializable{
     private Date birthday;
 
     private Date lastLoginTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;
@@ -222,5 +224,38 @@ public class TbUser implements Serializable{
 
     public void setLastLoginTime(Date lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("Hash = ").append(hashCode());
+        sb.append(", id=").append(id);
+        sb.append(", username=").append(username);
+        sb.append(", password=").append(password);
+        sb.append(", phone=").append(phone);
+        sb.append(", email=").append(email);
+        sb.append(", created=").append(created);
+        sb.append(", updated=").append(updated);
+        sb.append(", sourceType=").append(sourceType);
+        sb.append(", nickName=").append(nickName);
+        sb.append(", name=").append(name);
+        sb.append(", status=").append(status);
+        sb.append(", headPic=").append(headPic);
+        sb.append(", qq=").append(qq);
+        sb.append(", accountBalance=").append(accountBalance);
+        sb.append(", isMobileCheck=").append(isMobileCheck);
+        sb.append(", isEmailCheck=").append(isEmailCheck);
+        sb.append(", sex=").append(sex);
+        sb.append(", userLevel=").append(userLevel);
+        sb.append(", points=").append(points);
+        sb.append(", experienceValue=").append(experienceValue);
+        sb.append(", birthday=").append(birthday);
+        sb.append(", lastLoginTime=").append(lastLoginTime);
+        sb.append(", serialVersionUID=").append(serialVersionUID);
+        sb.append("]");
+        return sb.toString();
     }
 }

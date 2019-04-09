@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TbPayLogMapper {
-    int countByExample(TbPayLogExample example);
+    long countByExample(TbPayLogExample example);
 
     int deleteByExample(TbPayLogExample example);
 
