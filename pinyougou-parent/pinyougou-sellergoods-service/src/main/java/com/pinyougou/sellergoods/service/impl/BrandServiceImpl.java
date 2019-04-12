@@ -4,7 +4,6 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.pinyougou.entity.PageResult;
-import com.pinyougou.entity.ReturnResult;
 import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.pojo.TbBrandExample;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BrandServiceImpl implements BrandService {
@@ -75,7 +75,10 @@ public class BrandServiceImpl implements BrandService {
         tbBrandMapper.updateByPrimaryKey(brand);
     }
 
-
+    @Override
+    public List<Map> selectOptionList() {
+        return tbBrandMapper.selectOptionList();
+    }
 
 
 }

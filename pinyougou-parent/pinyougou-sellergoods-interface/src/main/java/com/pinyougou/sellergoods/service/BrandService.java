@@ -1,10 +1,10 @@
 package com.pinyougou.sellergoods.service;
 
 import com.pinyougou.entity.PageResult;
-import com.pinyougou.entity.ReturnResult;
 import com.pinyougou.pojo.TbBrand;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 品牌接口
@@ -54,5 +54,11 @@ public interface BrandService {
      * @param brand 品牌
      */
     void update(TbBrand brand);
+
+    /**
+     * 品牌下拉框
+     * @return
+     */
+    List<Map> selectOptionList();
 
 }
