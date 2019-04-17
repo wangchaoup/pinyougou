@@ -1,5 +1,11 @@
 package com.pinyougou.sellergoods.service.impl;
 import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
+import com.pinyougou.mapper.TbSpecificationOptionMapper;
+import com.pinyougou.pojo.TbSpecificationOption;
+import com.pinyougou.pojo.TbSpecificationOptionExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -20,6 +26,8 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
 	@Autowired
 	private TbTypeTemplateMapper typeTemplateMapper;
+	@Autowired
+	private TbSpecificationOptionMapper specificationOptionMapper;
 	
 	/**
 	 * 查询全部
@@ -44,7 +52,11 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 	 */
 	@Override
 	public void add(TbTypeTemplate typeTemplate) {
-		typeTemplateMapper.insert(typeTemplate);		
+		if (typeTemplate.getName() != null && typeTemplate.getName().length()>0){
+			typeTemplateMapper.insert(typeTemplate);
+		}else {
+			throw new RuntimeException();
+		}
 	}
 
 	
@@ -103,5 +115,32 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 		Page<TbTypeTemplate> page= (Page<TbTypeTemplate>)typeTemplateMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	@Override
+	public List<Map> selectOptionList() {
+		return typeTemplateMapper.selectOptionList();
+	}
+
+	/**
+	 * 添加商品时显示规格选项
+	 * @param id
+	 * @return
+	 */
+	@Override
+	public List<Map> findSpecList(Long id) {
+		//查询选项，通过文本id找到商品规格
+		TbTypeTemplate tbTypeTemplate = typeTemplateMapper.selectByPrimaryKey(id);
+		//string转json
+		List<Map> list = JSON.parseArray(tbTypeTemplate.getSpecIds(), Map.class);
+		//遍历
+		for (Map map : list) {
+			TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+			TbSpecificationOptionExample.Criteria criteria = example.createCriteria();
+			criteria.andSpecIdEqualTo(new Long((Integer)map.get("id")));
+			List<TbSpecificationOption> specificationOptions = specificationOptionMapper.selectByExample(example);
+			map.put("options",specificationOptions);
+		}
+		return list;
+	}
+
 }

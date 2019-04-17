@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!--放行静态资源-->
+    <http pattern="/css/**" security="none"></http>
+    <http pattern="/img/**" security="none"></http>
+    <http pattern="/js/**" security="none"></http>
+    <http pattern="/plugins/**" security="none"></http>
+	<!--不拦截默认加载页及错误页等不需要登陆就可以访问的页面-->
+    <http pattern="/**.html" security="none"></http>
+
+    <!--页面拦截规则-->
+    <!--禁用SPEL表达式，角色名不用使用表达式形式-->
+    <http use-expressions="false">
+    <intercept-url pattern="/**" access="ROLE_ADMIN"/>
+        <!--登陆页面 登陆成功默认页面 登陆失败页面 是否认证通过后跳转到成功页面-->
+        <form-login login-page="/login.html" default-target-url="/admin/index.html" authentication-failure-url="/login.html" always-use-default-target="true"/>
+        <!--跨域请求伪造禁用-->
+        <csrf disabled="true"/>
+
+        <!--同源策略（iframe框架），框架页同源-->
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
+        <!--退出登陆 退出后跳转到登陆页面-->
+        <logout  logout-success-url="/login.html"/>
+
+    </http>
+
+    <!--认证管理器-->
+    <authentication-manager>
+        <authentication-provider>
+            <!--角色认证（实际需要查询数据库）-->
+            <user-service>
+                <user name="admin" password="123456" authorities="ROLE_ADMIN"/>
+                <user name="xiaoyang" password="123456" authorities="ROLE_ADMIN"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>

@@ -1,7 +1,7 @@
 app.service("brandService",function ($http) {
-            //查询所有
+    //查询所有
     this.findAll=function () {
-       return $http.get("../brand/findAll.do");
+        return $http.get("../brand/findAll.do");
     }
 
     //新建
@@ -26,6 +26,6 @@ app.service("brandService",function ($http) {
     }
     //下拉列表
     this.selectOptionList=function(){
-    return $http.post('../brand/selectOptionList.do')
+        return $http.post('../brand/selectOptionList.do')
     }
 });

@@ -46,7 +46,7 @@ public class GoodsDescServiceImpl implements GoodsDescService {
 	 */
 	@Override
 	public void add(TbGoodsDesc goodsDesc) {
-		goodsDescMapper.insert(goodsDesc);		
+		goodsDescMapper.insert(goodsDesc);
 	}
 
 	
