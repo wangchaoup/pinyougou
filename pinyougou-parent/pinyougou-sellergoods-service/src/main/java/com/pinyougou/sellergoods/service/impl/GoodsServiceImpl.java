@@ -11,7 +11,10 @@ import com.pinyougou.pojo.*;
 import com.pinyougou.pojo.TbGoodsExample.Criteria;
 import com.pinyougou.sellergoods.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,7 @@ import java.util.Map;
  * @author Administrator
  */
 @Service
+@Transactional
 public class GoodsServiceImpl implements GoodsService {
 
     @Autowired
@@ -46,6 +50,7 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public List<TbGoods> findAll() {
+
         return goodsMapper.selectByExample(null);
     }
 
@@ -54,6 +59,7 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public PageResult findPage(int pageNum, int pageSize) {
+
         PageHelper.startPage(pageNum, pageSize);
         Page<TbGoods> page = (Page<TbGoods>) goodsMapper.selectByExample(null);
         return new PageResult(page.getTotal(), page.getResult());
@@ -69,11 +75,22 @@ public class GoodsServiceImpl implements GoodsService {
         goods.getGoods().setAuditStatus("0");
         goodsMapper.insert(goods.getGoods());
         //增加商品扩展信息,根据关联id进行添加
+
         goods.getGoodsDesc().setGoodsId(goods.getGoods().getId());
         goodsDescMapper.insert(goods.getGoodsDesc());
-        //如果规格状态为1则保存相应数据，否则不保存
+        saveItemList(goods);
+
+    }
+
+    /**
+     * 添加、修改商品SKU列表
+     *
+     * @param goods
+     */
+    private void saveItemList(Goods goods) {
         if ("1".equals(goods.getGoods().getIsEnableSpec())) {
-            for (TbItem item : goods.getItems()) {
+            //如果规格状态为1则保存相应数据，否则不保存
+            for (TbItem item : goods.getItemList()) {
                 //标题
                 String title = goods.getGoods().getGoodsName();
                 //规格json数据转换为集合
@@ -100,14 +117,20 @@ public class GoodsServiceImpl implements GoodsService {
             //库存数量
             item.setNum(99999);
             item.setSpec("{}");
-            setItemValues(goods,item);
+            setItemValues(goods, item);
             itemMapper.insert(item);
         }
 
     }
 
+    /**
+     * 设置sku字段值
+     *
+     * @param goods
+     * @param item
+     */
     private void setItemValues(Goods goods, TbItem item) {
-//商品SKU编号
+        //商品SKU编号
         item.setGoodsId(goods.getGoods().getId());
         //商家id
         item.setSellerId(goods.getGoods().getSellerId());
@@ -124,7 +147,7 @@ public class GoodsServiceImpl implements GoodsService {
         //设置品牌
         item.setBrand(brand.getName());
         //设置分类名
-        TbItemCat itemCat = itemCatMapper.selectByPrimaryKey(goods.getGoods().getBrandId());
+        TbItemCat itemCat = itemCatMapper.selectByPrimaryKey(goods.getGoods().getCategory3Id());
         item.setCategory(itemCat.getName());
         //设置商家名(店铺名)
         TbSeller seller = sellerMapper.selectByPrimaryKey(goods.getGoods().getSellerId());
@@ -143,19 +166,48 @@ public class GoodsServiceImpl implements GoodsService {
      * 修改
      */
     @Override
-    public void update(TbGoods goods) {
-        goodsMapper.updateByPrimaryKey(goods);
+    public void update(Goods goods) {
+        //修改过的商品需要重新审核，设置商品审核状态为0
+        goods.getGoods().setAuditStatus("0");
+        //更新商品
+        goodsMapper.updateByPrimaryKey(goods.getGoods());
+        //更新商品扩展表数据
+        goodsDescMapper.updateByPrimaryKey(goods.getGoodsDesc());
+        //更新商品SKU,删除原来的数据，重新添加
+        TbItemExample itemExample = new TbItemExample();
+        TbItemExample.Criteria criteria = itemExample.createCriteria();
+        criteria.andGoodsIdEqualTo(goods.getGoods().getId());
+        itemMapper.deleteByExample(itemExample);
+
+        //添加修改后的商品SKU
+        saveItemList(goods);
+
     }
 
     /**
-     * 根据ID获取实体
+     * 根据ID获取组合实体
      *
      * @param id
      * @return
      */
     @Override
-    public TbGoods findOne(Long id) {
-        return goodsMapper.selectByPrimaryKey(id);
+    public Goods findOne(Long id) {
+        //创建实体对象
+        Goods goods = new Goods();
+        //查询商品
+        TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+        //查询商品扩展信息
+        TbGoodsDesc tbGoodsDesc = goodsDescMapper.selectByPrimaryKey(id);
+        //查询SKU商品列表并返回
+        TbItemExample itemExample = new TbItemExample();
+        TbItemExample.Criteria criteria = itemExample.createCriteria();
+        //根据商品id进行查询
+        criteria.andGoodsIdEqualTo(id);
+        List<TbItem> itemList = itemMapper.selectByExample(itemExample);
+        goods.setGoods(tbGoods);
+        goods.setGoodsDesc(tbGoodsDesc);
+        goods.setItemList(itemList);
+        return goods;
     }
 
     /**
@@ -163,8 +215,11 @@ public class GoodsServiceImpl implements GoodsService {
      */
     @Override
     public void delete(Long[] ids) {
+        //删除并不是真正删除，把删除状态改为1
         for (Long id : ids) {
-            goodsMapper.deleteByPrimaryKey(id);
+            TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+            tbGoods.setIsDelete("1");
+            goodsMapper.updateByPrimaryKey(tbGoods);
         }
     }
 
@@ -175,19 +230,24 @@ public class GoodsServiceImpl implements GoodsService {
 
         TbGoodsExample example = new TbGoodsExample();
         Criteria criteria = example.createCriteria();
-
+        criteria.andIsDeleteIsNull();
         if (goods != null) {
             if (goods.getSellerId() != null && goods.getSellerId().length() > 0) {
-                criteria.andSellerIdLike("%" + goods.getSellerId() + "%");
+                //criteria.andSellerIdLike("%" + goods.getSellerId() + "%");
+                //唯一匹配
+                criteria.andSellerIdEqualTo(goods.getSellerId());
             }
             if (goods.getGoodsName() != null && goods.getGoodsName().length() > 0) {
                 criteria.andGoodsNameLike("%" + goods.getGoodsName() + "%");
             }
             if (goods.getAuditStatus() != null && goods.getAuditStatus().length() > 0) {
-                criteria.andAuditStatusLike("%" + goods.getAuditStatus() + "%");
+                //criteria.andAuditStatusLike("%" + goods.getAuditStatus() + "%");
+                //扩展字段时不可模糊查询
+                criteria.andAuditStatusEqualTo(goods.getAuditStatus());
             }
             if (goods.getIsMarketable() != null && goods.getIsMarketable().length() > 0) {
-                criteria.andIsMarketableLike("%" + goods.getIsMarketable() + "%");
+                //criteria.andIsMarketableLike("%" + goods.getIsMarketable() + "%");
+                criteria.andIsMarketableEqualTo(goods.getIsMarketable());
             }
             if (goods.getCaption() != null && goods.getCaption().length() > 0) {
                 criteria.andCaptionLike("%" + goods.getCaption() + "%");
@@ -206,6 +266,40 @@ public class GoodsServiceImpl implements GoodsService {
 
         Page<TbGoods> page = (Page<TbGoods>) goodsMapper.selectByExample(example);
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        for (Long id : ids) {
+            TbGoods tbGoods = goodsMapper.selectByPrimaryKey(id);
+            tbGoods.setAuditStatus(status);
+            goodsMapper.updateByPrimaryKey(tbGoods);
+        }
+    }
+
+    /**
+     * 商品上架状态
+     *
+     * @param ids
+     * @param status
+     */
+    @Override
+    public void updateMarketStatus(Long[] ids, String status) {
+        for (Long id : ids) {
+            TbGoods goods = goodsMapper.selectByPrimaryKey(id);
+            goods.setIsMarketable(status);
+            goodsMapper.updateByPrimaryKey(goods);
+        }
+    }
+
+    @Override
+    public List<TbItem> findItemListByGoodsIdandStatus(Long[] goodsIds, String status) {
+
+        TbItemExample example = new TbItemExample();
+        TbItemExample.Criteria criteria = example.createCriteria();
+        criteria.andGoodsIdIn(Arrays.asList(goodsIds));
+        criteria.andStatusEqualTo(status);
+        return itemMapper.selectByExample(example);
     }
 
 }

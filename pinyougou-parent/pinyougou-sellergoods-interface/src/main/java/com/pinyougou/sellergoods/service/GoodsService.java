@@ -2,9 +2,12 @@ package com.pinyougou.sellergoods.service;
 import java.util.List;
 
 import com.pinyougou.com.pinyougou.pojogroup.Goods;
+import com.pinyougou.entity.Result;
 import com.pinyougou.pojo.TbGoods;
 
 import com.pinyougou.entity.PageResult;
+import com.pinyougou.pojo.TbItem;
+
 /**
  * 服务层接口
  * @author Administrator
@@ -35,15 +38,15 @@ public interface GoodsService {
 	/**
 	 * 修改
 	 */
-	public void update(TbGoods goods);
+	public void update(Goods goods);
 	
 
 	/**
-	 * 根据ID获取实体
+	 * 根据ID获取组合实体
 	 * @param id
 	 * @return
 	 */
-	public TbGoods findOne(Long id);
+	public Goods findOne(Long id);
 	
 	
 	/**
@@ -59,5 +62,26 @@ public interface GoodsService {
 	 * @return
 	 */
 	public PageResult findPage(TbGoods goods, int pageNum,int pageSize);
-	
+
+	/**
+	 * 审核商品状态
+	 * @param ids
+	 * @param status
+	 */
+	void updateStatus(Long[] ids,String status);
+
+    /**
+     * 更新商品上架状态
+     * @param ids
+     * @param status
+     */
+    void updateMarketStatus(Long[] ids,String status);
+
+	/**
+	 * 把审核后的商品加载进solr库中
+	 * @param goodsIds
+	 * @param status
+	 * @return
+	 */
+	public List<TbItem> findItemListByGoodsIdandStatus(Long[] goodsIds, String status );
 }
