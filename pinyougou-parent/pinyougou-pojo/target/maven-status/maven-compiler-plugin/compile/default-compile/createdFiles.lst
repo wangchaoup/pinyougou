@@ -96,6 +96,7 @@ com\pinyougou\pojo\TbContentExample$GeneratedCriteria.class
 com\pinyougou\pojo\TbItemExample.class
 com\pinyougou\pojo\TbUserExample$Criterion.class
 com\pinyougou\pojo\TbSpecificationExample.class
+com\pinyougou\com\pinyougou\pojogroup\Cart.class
 com\pinyougou\pojo\TbContentExample.class
 com\pinyougou\pojo\TbSellerExample.class
 com\pinyougou\pojo\TbFreightTemplateExample$Criterion.class
